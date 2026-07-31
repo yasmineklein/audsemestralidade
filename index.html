@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auditoria de Semestralidade</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="nav">
+        <div class="container nav-container">
+            <ul class="nav-links">
+                <li><a href="https://yasmineklein.github.io/calculadorasbko/#menu">Menu</a></li>
+            </ul>
+        </div>  
+    </nav>
+
+    <div class="calculator-container">
+        <div class="calc-header">
+            <h2 class="calc-title">Auditoria de Semestralidade</h2>
+            <p class="calc-subtitle">
+                Compare o total faturado no semestre com o valor correto para identificar necessidade de crédito ou débito.
+            </p>
+        </div>
+
+        <div class="calc-body">
+            <!-- Referência de Cobrança -->
+            <fieldset>
+                <legend>Parâmetro de Cobrança</legend>
+                <div class="row-horizontal">
+                    <div class="input-group">
+                        <label for="valorMensalidade">Valor correto da mensalidade (R$):</label>
+                        <input type="text" id="valorMensalidade" class="input-field" placeholder="Ex: 410,87">
+                    </div>
+                    <div class="input-group">
+                        <label for="qtdBoletos">Qtd. de boletos gerados (1 a 6):</label>
+                        <input type="number" id="qtdBoletos" class="input-field" placeholder="Ex: 6" min="1" max="6" value="6">
+                    </div>
+                </div>
+            </fieldset>   
+
+            <!-- Faturamento do Semestre -->
+            <fieldset>
+                <legend>Total Faturado no SIA no Semestre</legend>
+                <div class="row-horizontal">
+                    <div class="input-group">
+                        <label for="mes1">1º Mensalidade:</label>
+                        <input type="text" id="mes1" class="input-field" placeholder="0,00">
+                    </div>
+                    <div class="input-group">
+                        <label for="mes2">2º Mensalidade:</label>
+                        <input type="text" id="mes2" class="input-field" placeholder="0,00">
+                    </div>
+                    <div class="input-group">
+                        <label for="mes3">3º Mensalidade:</label>
+                        <input type="text" id="mes3" class="input-field" placeholder="0,00">
+                    </div>
+                    <div class="input-group">
+                        <label for="mes4">4º Mensalidade:</label>
+                        <input type="text" id="mes4" class="input-field" placeholder="0,00">
+                    </div>
+                    <div class="input-group">
+                        <label for="mes5">5º Mensalidade:</label>
+                        <input type="text" id="mes5" class="input-field" placeholder="0,00">
+                    </div>
+                    <div class="input-group">
+                        <label for="mes6">6º Mensalidade:</label>
+                        <input type="text" id="mes6" class="input-field" placeholder="0,00">
+                    </div>
+                </div>
+            </fieldset>
+
+            <button onclick="auditarSemestralidade()">Verificar Resultado</button>
+            <button onclick="limparTudo()" style="background-color: transparent; border: 1px solid #00bfff; color: #121212; margin-top: 10px;">Limpar Tudo</button>
+            
+            <!-- Resultado da Auditoria -->
+            <fieldset>
+                <legend>Resultado</legend>
+                <div class="row-horizontal">   
+                    <div class="results-box" id="resultado" style="display: none; width: 100%;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <span>Total Faturado:</span>
+                            <strong id="resFaturado">R$ 0,00</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                            <span>Valor Correto (Semestralidade):</span>
+                            <strong id="resCorreto">R$ 0,00</strong>
+                        </div>
+                        <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.2); margin-bottom: 15px;">
+                        
+                        <p class="highlight" style="text-align: center;">
+                            Diferença: <span id="valorDiferenca">R$ 0,00</span>
+                        </p>
+                        <!-- CAIXA DE AÇÃO (Equivalente ao SE do Excel) -->
+                        <div id="caixaAcao" style="text-align: center; padding: 15px; border-radius: 6px; font-weight: bold; font-size: 1.2em; margin-top: 15px;">
+                            <span id="textoAcao"></span>
+                        </div>
+                    </div>
+                </div> 
+            </fieldset>  
+        </div>         
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 MF.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
