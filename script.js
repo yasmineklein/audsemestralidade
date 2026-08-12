@@ -1,4 +1,3 @@
-// Função auxiliar para tratar vírgulas e campos vazios (Estava faltando)
 function lerValorSeguro(id) {
     const elemento = document.getElementById(id);
     if (!elemento || elemento.value.trim() === "") {
@@ -9,31 +8,64 @@ function lerValorSeguro(id) {
     return parseFloat(campo);
 }
 
-function auditarSemestralidade() {
-    // 1. Pega os parâmetros de cobrança
-    const valorMensalidade = lerValorSeguro('valorMensalidade');
-    let qtdBoletos = parseInt(document.getElementById('qtdBoletos').value);
+// ==========================================
+// CONTROLE DO POP-UP 
+// ==========================================
+function fecharModal() {
+    document.getElementById('modalFluxograma').style.display = 'none';
+}
 
-    // Validação da quantidade de boletos
-    if (isNaN(qtdBoletos) || qtdBoletos < 1 || qtdBoletos > 6) {
-        alert("Por favor, informe uma quantidade válida de boletos gerados (1 a 6).");
+function validarAcesso() {
+    const checkboxes = document.querySelectorAll('.fluxo-check');
+    let todosMarcados = true;
+    
+    checkboxes.forEach(cb => {
+        if (!cb.checked) todosMarcados = false;
+    });
+
+    if (!todosMarcados) {
+        alert("Você precisa confirmar todos os passos do fluxograma para liberar a calculadora.");
         return;
     }
 
-    // 2. Soma as mensalidades faturadas no SIA até o limite de boletos gerados
-    let totalFaturado = 0;
-    for (let i = 1; i <= qtdBoletos; i++) {
-        totalFaturado += lerValorSeguro('mes' + i);
+    fecharModal();
+}
+
+// ==========================================
+// LÓGICA DE AUDITORIA
+// ==========================================
+function auditarSemestralidade() {
+    const valorMensalidade = lerValorSeguro('valorMensalidade');
+
+    // Impede o cálculo se o valor base não estiver preenchido
+    if (valorMensalidade === 0) {
+        alert("Por favor, preencha o valor correto da mensalidade (Referência).");
+        return;
     }
 
-    // 3. Calcula o total correto esperado para os meses gerados
+    let qtdBoletos = 0;
+    let totalFaturado = 0;
+
+    
+    for (let i = 1; i <= 6; i++) {
+        const elementoMes = document.getElementById('mes' + i);
+        if (elementoMes && elementoMes.value.trim() !== "") {
+            qtdBoletos++;
+            totalFaturado += lerValorSeguro('mes' + i);
+        }
+    }
+
+    if (qtdBoletos === 0) {
+        alert("Por favor, preencha pelo menos uma mensalidade faturada no SIA.");
+        return;
+    }
+
     const totalCorreto = valorMensalidade * qtdBoletos;
 
-    // 4. Calcula a diferença (Faturado - Correto)
     let diferenca = totalFaturado - totalCorreto;
     diferenca = Math.round(diferenca * 100) / 100;
 
-    // 5. Aplicação da Lógica de Ação
+    // Lógica de Ação
     let textoAcao = "";
     let corFundo = "";
     let corTexto = "";
@@ -41,29 +73,28 @@ function auditarSemestralidade() {
     if (diferenca > 0) {
         textoAcao = "Lançar Crédito";
         corFundo = "rgba(46, 213, 115, 0.2)"; 
-        corTexto = "#2ed573"; 
+        corTexto = "#085729"; 
     } else if (diferenca < 0) {
-        textoAcao = "Lançar Débito";
+        textoAcao = "Ajuste faturado a menor";
         corFundo = "rgba(255, 71, 87, 0.2)"; 
-        corTexto = "#ff4757"; 
+        corTexto = "#940c30"; 
     } else if (diferenca === 0) {
         textoAcao = "Sem ação a ser feita";
         corFundo = "rgba(0, 191, 255, 0.2)"; 
-        corTexto = "#00bfff"; 
+        corTexto = "#0220ff"; 
     }
 
-    // 6. Formatação e Atualização da Interface
+    // Formatação e Atualização da Interface
     const formatarMoeda = (valor) => Math.abs(valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
+    document.getElementById('resQtdBoletos').innerText = qtdBoletos;
     document.getElementById('resFaturado').innerText = totalFaturado.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     document.getElementById('resCorreto').innerText = totalCorreto.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     
-    // Mostra o sinal visualmente
     const sinalDiferenca = diferenca < 0 ? "-" : (diferenca > 0 ? "+" : "");
     document.getElementById('valorDiferenca').innerText = sinalDiferenca + formatarMoeda(diferenca);
     document.getElementById('valorDiferenca').style.color = corTexto;
 
-    // Aplica o status da ação
     document.getElementById('textoAcao').innerText = textoAcao;
     document.getElementById('caixaAcao').style.backgroundColor = corFundo;
     document.getElementById('caixaAcao').style.color = corTexto;
@@ -74,7 +105,6 @@ function auditarSemestralidade() {
 
 function limparTudo() {
     document.getElementById('valorMensalidade').value = "";
-    document.getElementById('qtdBoletos').value = "6"; // Retorna ao padrão
     for (let i = 1; i <= 6; i++) {
         document.getElementById('mes' + i).value = "";
     }
