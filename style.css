@@ -32,12 +32,13 @@ body {
 ========================================= */
 .nav {
     width: 100%;
-    background: rgba(0, 26, 51, 0.5); 
+    background: transparent; 
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); 
     padding: 15px 20px;
-    position: fixed; /* Fixa o menu no topo */
+    position: fixed; 
     top: 0;
     left: 0;
     z-index: 1000;
@@ -230,12 +231,12 @@ button:hover {
 footer {
     width: 100%;
     text-align: center;
-    padding: 20px;
-    background: rgba(0, 26, 51, 0.4); 
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 10px 20px;
+    background: transparent; 
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
     color: rgba(255, 255, 255, 0.6); 
     font-size: 14px;
-    margin-top: auto; 
+    margin-top: auto;
 }
 
 /* =========================================
