@@ -24,10 +24,10 @@
             <p style="font-size: 0.85em; color: rgb(18, 18, 18); text-align: center; margin-top: 8px; line-height: 1.4;"> 
                 Compare o total faturado no semestre com o valor atualizado para identificar necessidade de crédito ou débito.
             </p>
-
         </div>
 
         <div class="calc-body">
+
             <!-- Referência de Cobrança -->
             <fieldset>
                 <legend>Referência de Mensalidade</legend>
@@ -74,41 +74,16 @@
                 </div>
             </fieldset>
 
-            
             <button onclick="auditarSemestralidade()">Verificar Resultado</button>
             <button onclick="limparTudo()" style="background-color: transparent; border: 1px solid #00bfff; color: #fff; margin-top: 10px;">Limpar Tudo</button>
-            
-            <!-- Resultado da Auditoria -->
-            <fieldset>
-                <legend>Resultado</legend>
-                <div class="row-horizontal">   
-                    <div class="results-box" id="resultado" style="display: none; width: 100%;">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                            <span>Total Faturado (<span id="resQtdBoletos">0</span> meses):</span>
-                            <strong id="resFaturado">R$ 0,00</strong>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
-                            <span>Valor Correto (Semestralidade):</span>
-                            <strong id="resCorreto">R$ 0,00</strong>
-                        </div>
-                        <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.2); margin-bottom: 15px;">
-                        
-                        <p class="highlight" style="text-align: center;">
-                            Diferença: <span id="valorDiferenca">R$ 0,00</span>
-                        </p>
-                        
-                        <div id="caixaAcao" style="text-align: center; padding: 15px; border-radius: 6px; font-weight: bold; font-size: 1.2em; margin-top: 15px;">
-                            <span id="textoAcao"></span>
-                        </div>
-                    </div>
-                </div> 
-            </fieldset>  
         </div>         
     </div>
 
-    <!-- ESTRUTURA DO POP-UP -->
+    <!-- ESTRUTURA DO POP-UP 1 -->
     <div id="modalFluxograma" class="modal-overlay" style="display: flex;">
         <div class="modal-content">
+            <span class="close-btn" onclick="fecharModal()">&times;</span>
+            
             <h3 style="color: #ecf0f2; margin-bottom: 15px; text-align: center;">Verificação de ajuste</h3>
             <p style="color: rgba(255,255,255,0.8); font-size: 0.9em; margin-bottom: 20px; text-align: center;">
                 Confirme se as validações abaixo foram realizadas no SIA antes de calcular a cobrança:
@@ -116,25 +91,56 @@
             
             <div class="checklist">
                 <label class="check-item">
-                    <input type="checkbox" class="fluxo-check"> 
+                    
+                    <input type="checkbox" id="checkAjuste" class="fluxo-check"> 
                     <div>
                         Verifiquei se houve inclusão, exclusão ou isenção de disciplinas.<br><br>
-
                         Verifiquei se há bolsas de desconto aplicadas corretamente e recalculei o boleto.
                     </div>
                 </label>
             </div>
 
-            
             <div style="margin-top: 15px; padding: 10px; background: rgba(255, 71, 87, 0.1); border-left: 4px solid #ff4757; border-radius: 4px;">
                 <p style="color: #ffb8b8; font-size: 0.85em; margin: 0; text-align: left;">
-                    <strong>Atenção:</strong> Em casos de não aplicação dos descontos e isenções, abrir chamado para o setor responsável.
+                    <strong>Atenção:</strong> Em casos de não aplicação dos descontos e isenções, abrir chamado para o <a href="https://yduqs.service-now.com/esc?id=sc_cat_item&sys_id=43e151e51b4f2150ff94404be54bcbee" target="_blank" rel="noopener noreferrer" style="color: #ff4757; font-weight: bold; text-decoration: underline;">Faturamento</a>.
                 </p>
             </div>
 
             <div style="display: flex; justify-content: center; margin-top: 25px;">
-                
                 <button onclick="validarAcesso()" style="background: #00bfff; color: #001A33; width: 100%;">Confirmar e Iniciar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ESTRUTURA DO POP-UP DE RESULTADO -->
+    <div id="modalResultado" class="modal-overlay" style="display: none;">
+        <div class="modal-content" style="max-width: 450px;">
+            <span class="close-btn" onclick="fecharModalResultado()">&times;</span>
+            
+            <h3 style="color: #00bfff; margin-bottom: 20px; text-align: center;">Resumo da Auditoria</h3>
+            
+            <div style="display: flex; justify-content: space-between; margin-bottom: 10px; color: #fff;">
+                <span>Total Faturado (<span id="resQtdBoletos">0</span> meses):</span>
+                <strong id="resFaturado">R$ 0,00</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 15px; color: #fff;">
+                <span>Valor Correto (Semestralidade):</span>
+                <strong id="resCorreto">R$ 0,00</strong>
+            </div>
+            <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.2); margin-bottom: 15px;">
+            
+            <p class="highlight" style="text-align: center; margin-bottom: 15px;">
+                Diferença: <span id="valorDiferenca">R$ 0,00</span>
+            </p>
+            
+            <div id="caixaAcao" style="text-align: center; padding: 15px; border-radius: 6px; font-weight: bold; font-size: 1.2em; margin-bottom: 15px;">
+                <span id="textoAcao"></span>
+            </div>
+
+            <p id="detalheCredito" style="color: #ecf0f2; font-size: 0.9em; text-align: center; display: none; background: rgba(255,255,255,0.05); padding: 12px; border-radius: 6px; border-left: 4px solid #2ed573; line-height: 1.5;"></p>
+
+            <div style="display: flex; justify-content: center; margin-top: 25px;">
+                <button onclick="fecharModalResultado()" style="background: transparent; border: 1px solid #00bfff; color: #00bfff; width: 100%;">Fechar Resultado</button>
             </div>
         </div>
     </div>
