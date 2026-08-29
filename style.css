@@ -6,37 +6,23 @@
     box-sizing: border-box;
 }
 
-/* =========================================
-   BODY E FUNDO
-========================================= */
 body {
     font-family: 'Roboto', sans-serif;
-    background: linear-gradient(-90deg, #206cb8, #4fa0ec, #73b1f0);
-    background-size: 400% 400%;
-    animation: gradient 20s ease infinite;
+    background: linear-gradient(135deg, #18528f 20%, #206cb8 100%);
+    color: #ffffff;
     display: flex;
     flex-direction: column; 
     align-items: center; 
     min-height: 100vh;
-    margin: 0;
 }
 
-@keyframes gradient {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
-/* =========================================
-   CABEÇALHO 
-========================================= */
 .nav {
     width: 100%;
-    background: transparent; 
+    background: rgba(255, 255, 255, 0.05); 
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); 
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); 
     padding: 15px 20px;
     position: fixed; 
     top: 0;
@@ -59,7 +45,7 @@ body {
 
 .nav-links a {
     text-decoration: none;
-    color: #fff;
+    color: #ffffff;
     font-weight: 500;
     font-size: 16px;
     transition: color 0.3s ease;
@@ -90,13 +76,13 @@ body {
    CALCULADORA - CONTAINER PRINCIPAL
 ========================================= */
 .calculator-container {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.08); 
     backdrop-filter: blur(15px); 
     -webkit-backdrop-filter: blur(15px); 
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     padding: 30px;
     border-radius: 12px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
     width: 100%;
     max-width: 900px;
     margin-top: 100px; 
@@ -106,29 +92,31 @@ body {
 h2 {
     font-size: clamp(1.8rem, 3vw, 1.5rem); 
     margin-bottom: 0.5rem;
-    color: #111111;
+    color: #ffffff; 
     text-align: center;
 }
 
 p {
     text-align: center;
     margin-bottom: 25px;
-    color: rgba(7, 7, 7, 0.967); 
+    color: rgba(255, 255, 255, 0.85); 
     line-height: 1.5;
 }
 
 fieldset {
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3); 
     border-radius: 8px;
     padding: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
+    background: rgba(255, 255, 255, 0.02); 
 }
 
 legend {
     text-align: center;
-    font-weight: 500;
-    color: #1e1f1f; 
-    padding: 0 10px;
+    font-weight: 700;
+    color: #ffffff; 
+    padding: 0 15px;
+    font-size: 1.1em;
 }
 
 .row-horizontal {
@@ -149,34 +137,39 @@ legend {
 }
 
 label {
-    font-weight: bold;
-    color: #111111;
-    margin-bottom: 5px;
-    font-size: 0.8em;
+    font-weight: 500;
+    color: #ffffff; 
+    margin-bottom: 8px;
+    font-size: 0.9em;
 }
 
+/* =========================================
+   CAMPOS DE INPUTS
+========================================= */
 .input-field {
     width: 100%;
-    padding: 12px;
-    background: rgba(255, 255, 255, 0.08); 
-    color: #0c0b0b; 
+    padding: 12px 15px;
+    background: rgba(0, 0, 0, 0.15); 
+    color: #ffffff; 
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 6px;
     box-sizing: border-box;
     font-size: 16px;
+    font-weight: 500;
     height: 46px; 
     transition: all 0.3s ease;
 }
 
 .input-field::placeholder {
-    color: rgba(2, 2, 2, 0.4); 
+    color: rgba(255, 255, 255, 0.4); 
+    font-weight: 400;
 }
 
 .input-field:focus {
     outline: none;
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(0, 0, 0, 0.25); 
     border-color: #00bfff; 
-    box-shadow: 0 0 8px rgba(0, 191, 255, 0.4);
+    box-shadow: 0 0 10px rgba(0, 191, 255, 0.4);
 }
 
 .input-field[type="number"]::-webkit-inner-spin-button,
@@ -190,7 +183,7 @@ label {
 
 button {
     width: 100%;
-    padding: 12px;
+    padding: 14px;
     background-color: #00bfff;
     color: #001A33; 
     border: none;
@@ -205,22 +198,9 @@ button {
 }
 
 button:hover {
-    background-color: #009acd;
-    box-shadow: 0 5px 15px rgba(28, 29, 30, 0.4);
+    background-color: #33ccff; 
+    box-shadow: 0 5px 15px rgba(0, 191, 255, 0.3);
     transform: translateY(-2px);
-}
-
-.results-box {
-    margin-top: 25px;
-    padding: 15px;
-    background-color: rgba(255, 255, 255, 0.05);
-    border-left: 4px solid #1abc9c;
-    border-radius: 4px;
-}
-
-.highlight {
-    font-size: 1.1em;
-    color: #aa3023;
 }
 
 /* =========================================
@@ -229,10 +209,10 @@ button:hover {
 footer {
     width: 100%;
     text-align: center;
-    padding: 10px 20px;
+    padding: 15px 20px;
     background: transparent; 
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
-    color: rgba(255, 255, 255, 0.9); 
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.7); 
     font-size: 14px;
     margin-top: auto;
 }
@@ -246,8 +226,8 @@ footer {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 10, 25, 0.8); 
-    backdrop-filter: blur(5px);
+    background: rgba(0, 10, 25, 0.85); 
+    backdrop-filter: blur(8px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -255,7 +235,7 @@ footer {
 }
 
 .modal-content {
-    background: #001A33;
+    background: #0a2540; 
     border: 1px solid rgba(0, 191, 255, 0.3);
     padding: 30px;
     border-radius: 12px;
@@ -265,7 +245,6 @@ footer {
     animation: modalFadeIn 0.3s ease-out;
     position: relative; 
 }
-
 
 .close-btn {
     position: absolute;
@@ -297,23 +276,60 @@ footer {
 .check-item {
     display: flex;
     align-items: flex-start;
-    gap: 10px;
-    background: rgba(255,255,255,0.05);
-    padding: 12px;
-    border-radius: 6px;
+    gap: 12px;
+    background: rgba(255,255,255,0.08);
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.1);
     cursor: pointer;
-    font-size: 0.9em;
-    color: #fff;
-    transition: background 0.2s;
+    font-size: 0.95em;
+    color: #ffffff;
+    transition: all 0.2s;
 }
 
 .check-item:hover {
-    background: rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.12);
+    border-color: rgba(0,191,255,0.5);
 }
 
 .check-item input[type="checkbox"] {
     margin-top: 3px;
+}
+
+input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    background: rgba(255, 255, 255, 0.1); 
+    border: 1px solid rgba(255, 255, 255, 0.4); 
+    border-radius: 4px;
     cursor: pointer;
-    transform: scale(1.2);
-    accent-color: #00bfff;
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 5px; 
+    transition: all 0.3s ease;
+}
+
+input[type="checkbox"]:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: #00bfff; 
+}
+
+input[type="checkbox"]:checked {
+    background: rgba(0, 191, 255, 0.25); 
+    border-color: #00bfff;
+}
+
+input[type="checkbox"]:checked::after {
+    content: '';
+    position: absolute;
+    top: 1px;
+    left: 5px;
+    width: 4px;
+    height: 9px;
+    border: solid #ffffff; 
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
 }
