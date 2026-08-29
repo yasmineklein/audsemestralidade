@@ -31,7 +31,7 @@ function fecharModalResultado() {
 
 function auditarSemestralidade() {
     const valorIntegralBase = lerValor('valorMensalidade');
-    const valorParcelaLeve = lerValor('parcelaLeve'); /
+    const valorParcelaLeve = lerValor('parcelaLeve'); 
 
     if (valorIntegralBase === 0) {
         alert("Por favor, preencha o valor integral da mensalidade.");
@@ -70,7 +70,6 @@ function auditarSemestralidade() {
                 }
             });
 
-        
             valorEsperadoNesteMes += valorParcelaLeve;
 
             let esperadoCentavos = Math.round(valorEsperadoNesteMes * 100);
