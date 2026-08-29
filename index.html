@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auditoria de Semestralidade</title>
+    <title>Auditoria de Semestralidade com Exceções</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -21,31 +21,119 @@
             <p class="calc-subtitle">
                 Calculadora de movimentação de disciplinas e conferência de boletos
             </p>
-            <p style="font-size: 0.85em; color: rgb(18, 18, 18); text-align: center; margin-top: 8px; line-height: 1.4;"> 
+            <p style="font-size: 0.85em; color: rgb(255, 255, 255, 0.7); text-align: center; margin-top: 8px; line-height: 1.4;"> 
                 Compare o total faturado no semestre com o valor atualizado para identificar necessidade de crédito ou débito.
             </p>
         </div>
 
         <div class="calc-body">
-
-            <!-- Referência de Cobrança -->
             <fieldset>
                 <legend>Referência de Mensalidade</legend>
                 <div class="row-horizontal">
                     <div class="input-group">
-                        <label for="valorMensalidade">Valor da mensalidade após movimentação (R$):</label>
-                        <input type="text" id="valorMensalidade" class="input-field" placeholder="0,00">
-                        
-                        <p style="font-size: 0.85em; color: rgb(18, 18, 18); text-align: justify; margin-top: 8px; line-height: 1.4;"> 
-                            Informe o valor atualizado da mensalidade (com descontos). Ex: valor exibido no subtotal ou no próximo boleto gerado.
+                        <label for="valorMensalidade">Valor Integral da Mensalidade (Sem descontos)</label>
+                        <input type="text" inputmode="decimal" id="valorMensalidade" class="input-field" placeholder="0,00">
+
+                        <p style="font-size: 0.85em; color: rgb(255, 255, 255, 0.7); text-align: justify; margin-top: 8px; line-height: 1.4;"> 
+                            Informe o valor atualizado da mensalidade integral. Ex: faça a soma dos valores das disciplinas.
                         </p>
+
+                        <div class="input-group">
+                            <label for="parcelaLeve">Valor da Parcela Leve - Em casos de adesão</label>
+                            <input type="text" inputmode="decimal" id="parcelaLeve" class="input-field" placeholder="0,00">
+                            <p style="font-size: 0.85em; color: rgb(255, 255, 255, 0.7); text-align: justify; margin-top: 8px; line-height: 1.4;"> 
+                               Valor do parcelamento que será somada a todos os meses após o desconto das bolsas.
+                            </p>
+
+                        </div>
                     </div>
                 </div>
-            </fieldset>   
+            </fieldset>
 
-            <!-- Faturamento do Semestre -->
             <fieldset>
-                <legend>Total Faturado no SIA no Semestre</legend>
+                <legend>Bolsas Aplicadas (%)</legend>
+                <div class="row-horizontal">
+                    
+                    <div class="input-group">
+                        <label for="bolsa1">Percentual da Bolsa 1 (%):</label>
+                        <input type="text" inputmode="decimal" id="bolsa1" class="input-field" placeholder="Ex: 30,00">
+                        <div style="margin-top: 10px; display: flex; gap: 12px; flex-wrap: wrap; color: rgba(255, 255, 255, 0.9); font-size: 0.9em; align-items: center;">
+                            <label><strong>Aplicação:</strong></label>
+                            <label><input type="checkbox" id="b1_todos" onclick="alternarTodos(1)"> Todos</label>
+                            <label><input type="checkbox" id="b1_m1" class="check-b1"> 1</label>
+                            <label><input type="checkbox" id="b1_m2" class="check-b1"> 2</label>
+                            <label><input type="checkbox" id="b1_m3" class="check-b1"> 3</label>
+                            <label><input type="checkbox" id="b1_m4" class="check-b1"> 4</label>
+                            <label><input type="checkbox" id="b1_m5" class="check-b1"> 5</label>
+                            <label><input type="checkbox" id="b1_m6" class="check-b1"> 6</label>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="bolsa2">Percentual da Bolsa 2 (%):</label>
+                        <input type="text" inputmode="decimal" id="bolsa2" class="input-field" placeholder="Ex: 15,00">
+                        <div style="margin-top: 10px; display: flex; gap: 12px; flex-wrap: wrap; color: rgba(255, 255, 255, 0.9); font-size: 0.9em; align-items: center;">
+                            <label><strong>Aplicação:</strong></label>
+                            <label><input type="checkbox" id="b2_todos" onclick="alternarTodos(2)"> Todos</label>
+                            <label><input type="checkbox" id="b2_m1" class="check-b2"> 1</label>
+                            <label><input type="checkbox" id="b2_m2" class="check-b2"> 2</label>
+                            <label><input type="checkbox" id="b2_m3" class="check-b2"> 3</label>
+                            <label><input type="checkbox" id="b2_m4" class="check-b2"> 4</label>
+                            <label><input type="checkbox" id="b2_m5" class="check-b2"> 5</label>
+                            <label><input type="checkbox" id="b2_m6" class="check-b2"> 6</label>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="bolsa3">Percentual da Bolsa 3 (%):</label>
+                        <input type="text" inputmode="decimal" id="bolsa3" class="input-field" placeholder="Ex: 10,00">
+                        <div style="margin-top: 10px; display: flex; gap: 12px; flex-wrap: wrap; color: rgba(255, 255, 255, 0.9); font-size: 0.9em; align-items: center;">
+                            <label><strong>Aplicação:</strong></label>
+                            <label><input type="checkbox" id="b3_todos" onclick="alternarTodos(3)"> Todos</label>
+                            <label><input type="checkbox" id="b3_m1" class="check-b3"> 1</label>
+                            <label><input type="checkbox" id="b3_m2" class="check-b3"> 2</label>
+                            <label><input type="checkbox" id="b3_m3" class="check-b3"> 3</label>
+                            <label><input type="checkbox" id="b3_m4" class="check-b3"> 4</label>
+                            <label><input type="checkbox" id="b3_m5" class="check-b3"> 5</label>
+                            <label><input type="checkbox" id="b3_m6" class="check-b3"> 6</label>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="bolsa4">Percentual da Bolsa 4 (%):</label>
+                        <input type="text" inputmode="decimal" id="bolsa4" class="input-field" placeholder="Ex: 5,00">
+                        <div style="margin-top: 10px; display: flex; gap: 12px; flex-wrap: wrap; color: rgba(255, 255, 255, 0.9); font-size: 0.9em; align-items: center;">
+                            <label><strong>Aplicação:</strong></label>
+                            <label><input type="checkbox" id="b4_todos" onclick="alternarTodos(4)"> Todos</label>
+                            <label><input type="checkbox" id="b4_m1" class="check-b4"> 1</label>
+                            <label><input type="checkbox" id="b4_m2" class="check-b4"> 2</label>
+                            <label><input type="checkbox" id="b4_m3" class="check-b4"> 3</label>
+                            <label><input type="checkbox" id="b4_m4" class="check-b4"> 4</label>
+                            <label><input type="checkbox" id="b4_m5" class="check-b4"> 5</label>
+                            <label><input type="checkbox" id="b4_m6" class="check-b4"> 6</label>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="bolsa5">Percentual da Bolsa 5 (%):</label>
+                        <input type="text" inputmode="decimal" id="bolsa5" class="input-field" placeholder="Ex: 5,00">
+                        <div style="margin-top: 10px; display: flex; gap: 12px; flex-wrap: wrap; color: rgba(255, 255, 255, 0.9); font-size: 0.9em; align-items: center;">
+                            <label><strong>Aplicação:</strong></label>
+                            <label><input type="checkbox" id="b5_todos" onclick="alternarTodos(5)"> Todos</label>
+                            <label><input type="checkbox" id="b5_m1" class="check-b5"> 1</label>
+                            <label><input type="checkbox" id="b5_m2" class="check-b5"> 2</label>
+                            <label><input type="checkbox" id="b5_m3" class="check-b5"> 3</label>
+                            <label><input type="checkbox" id="b5_m4" class="check-b5"> 4</label>
+                            <label><input type="checkbox" id="b5_m5" class="check-b5"> 5</label>
+                            <label><input type="checkbox" id="b5_m6" class="check-b5"> 6</label>
+                        </div>
+                    </div>
+                    
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Total Faturado no SIA</legend>
                 <div class="row-horizontal">
                     <div class="input-group">
                         <label for="mes1">1º Mensalidade:</label>
@@ -75,11 +163,11 @@
             </fieldset>
 
             <button onclick="auditarSemestralidade()">Verificar Resultado</button>
-            <button onclick="limparTudo()" style="background-color: transparent; border: 1px solid #00bfff; color: #fff; margin-top: 10px;">Limpar Tudo</button>
-        </div>         
-    </div>
+            <button onclick="limparTudo()" style="background-color: transparent; border: 1px solid #00bfff; color: #00bfff; margin-top: 10px;">Limpar Tudo</button>
+        </div>
+    </div> 
 
-    <!-- ESTRUTURA DO POP-UP 1 -->
+    <!-- ESTRUTURA DO POP-UP DE VERIFICAÇÃO INICIAL -->
     <div id="modalFluxograma" class="modal-overlay" style="display: flex;">
         <div class="modal-content">
             <span class="close-btn" onclick="fecharModal()">&times;</span>
@@ -91,7 +179,6 @@
             
             <div class="checklist">
                 <label class="check-item">
-                    
                     <input type="checkbox" id="checkAjuste" class="fluxo-check"> 
                     <div>
                         Verifiquei se houve inclusão, exclusão ou isenção de disciplinas.<br><br>
