@@ -2,9 +2,7 @@ function lerValorSeguro(id) {
     const elemento = document.getElementById(id);
     if (!elemento || elemento.value.trim() === "") return 0;
     let campo = elemento.value.trim().replace(/\./g, '').replace(',', '.');
-    const valor = parseFloat(campo);
-    if (isNaN(valor)) throw new Error(`Valor inválido no campo "${id}": "${elemento.value}"`);
-    return valor;
+    return parseFloat(campo);
 }
 
 function alternarTodos(numBolsa) {
@@ -50,10 +48,13 @@ function auditarSemestralidade() {
     let qtdBoletos = 0;
     let totalFaturado = 0;
     let totalCorreto = 0; 
-    let detalhesCredito = []; 
+    
+    
+    let detalhesAcao = []; 
     
     let mesesMaior = [];
     let mesesMenor = [];
+    let analiseMeses = []; 
     
     const formatarMoeda = (valor) => Math.abs(valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
@@ -78,9 +79,15 @@ function auditarSemestralidade() {
 
             let diferencaNesteMes = Math.round((valorFaturadoMes - valorCorretoNesteMes) * 100) / 100;
             
+            analiseMeses.push({
+                mes: i,
+                faturado: valorFaturadoMes,
+                correto: valorCorretoNesteMes,
+                diferenca: diferencaNesteMes
+            });
+
             if (diferencaNesteMes > 0) {
                 mesesMaior.push(i);
-                detalhesCredito.push(`<strong>Boleto ${i}:</strong> Gerado por ${formatarMoeda(valorFaturadoMes)}, no entanto, deveria ser ${formatarMoeda(valorCorretoNesteMes)}. Lançar crédito de <strong>${formatarMoeda(diferencaNesteMes)}</strong> (cobrança excedente).`);
             } else if (diferencaNesteMes < 0) {
                 mesesMenor.push(i);
             }
@@ -94,6 +101,50 @@ function auditarSemestralidade() {
 
     let diferencaTotal = totalFaturado - totalCorreto;
     diferencaTotal = Math.round(diferencaTotal * 100) / 100;
+
+    
+    if (diferencaTotal > 0 && mesesMaior.length > 0) {
+        let somaExcedentes = analiseMeses.reduce((acc, m) => m.diferenca > 0 ? acc + m.diferenca : acc, 0);
+        let creditoDistribuido = 0;
+        let excedentesList = analiseMeses.filter(m => m.diferenca > 0);
+
+        excedentesList.forEach((m, index) => {
+            let creditoAplicado;
+            
+            if (index === excedentesList.length - 1) {
+                creditoAplicado = Math.round((diferencaTotal - creditoDistribuido) * 100) / 100;
+            } else {
+                let proporcao = m.diferenca / somaExcedentes;
+                creditoAplicado = Math.round((diferencaTotal * proporcao) * 100) / 100;
+                creditoDistribuido += creditoAplicado;
+            }
+
+            let novoCorreto = Math.round((m.faturado - creditoAplicado) * 100) / 100;
+            detalhesAcao.push(`<strong>Boleto ${m.mes}:</strong> Gerado por ${formatarMoeda(m.faturado)}, no entanto, deveria ser ${formatarMoeda(novoCorreto)}. Lançar crédito de <strong>${formatarMoeda(creditoAplicado)}</strong> (cobrança excedente).`);
+        });
+    }
+    
+    else if (diferencaTotal < 0 && mesesMenor.length > 0) {
+        let debitoTotalAbs = Math.abs(diferencaTotal);
+        let somaFaltantes = analiseMeses.reduce((acc, m) => m.diferenca < 0 ? acc + Math.abs(m.diferenca) : acc, 0);
+        let debitoDistribuido = 0;
+        let faltantesList = analiseMeses.filter(m => m.diferenca < 0);
+
+        faltantesList.forEach((m, index) => {
+            let debitoAplicado;
+            
+            if (index === faltantesList.length - 1) {
+                debitoAplicado = Math.round((debitoTotalAbs - debitoDistribuido) * 100) / 100;
+            } else {
+                let proporcao = Math.abs(m.diferenca) / somaFaltantes;
+                debitoAplicado = Math.round((debitoTotalAbs * proporcao) * 100) / 100;
+                debitoDistribuido += debitoAplicado;
+            }
+
+            let novoCorreto = Math.round((m.faturado + debitoAplicado) * 100) / 100;
+            detalhesAcao.push(`<strong>Boleto ${m.mes}:</strong> Gerado por ${formatarMoeda(m.faturado)}, no entanto, deveria ser ${formatarMoeda(novoCorreto)}. Lançar débito de <strong>${formatarMoeda(debitoAplicado)}</strong> (cobrança a menor).`);
+        });
+    }
 
     let textoAcao = "";
     let corFundo = "";
@@ -130,8 +181,9 @@ function auditarSemestralidade() {
     
     const formatarListaMeses = (arr) => arr.length > 1 ? arr.join(', ').replace(/, ([^,]*)$/, ' e $1') : arr[0];
 
-    if (diferencaTotal > 0 && detalhesCredito.length > 0) {
-        let listaHTML = detalhesCredito.map(item => `<li style="margin-bottom: 8px;">${item}</li>`).join('');
+    
+    if (diferencaTotal > 0 && detalhesAcao.length > 0) {
+        let listaHTML = detalhesAcao.map(item => `<li style="margin-bottom: 8px;">${item}</li>`).join('');
         
         detalheElement.innerHTML = `Para corrigir o faturamento, segue o detalhamento referente à cobrança excedente:<br>
         <ul style="text-align: left; margin-top: 10px; margin-left: 10px; padding-left: 20px; color: #fff; font-size: 0.95em;">
@@ -141,11 +193,26 @@ function auditarSemestralidade() {
         detalheElement.style.display = "block";
         detalheElement.style.textAlign = "left"; 
         
-    } else if (diferencaTotal === 0) {
+    } 
+    
+    else if (diferencaTotal < 0 && detalhesAcao.length > 0) {
+        let listaHTML = detalhesAcao.map(item => `<li style="margin-bottom: 8px;">${item}</li>`).join('');
+        
+        detalheElement.innerHTML = `Para corrigir o faturamento, segue o detalhamento referente à cobrança a menor:<br>
+        <ul style="text-align: left; margin-top: 10px; margin-left: 10px; padding-left: 20px; color: #fff; font-size: 0.95em;">
+            ${listaHTML}
+        </ul>`;
+        detalheElement.style.borderLeft = "4px solid #ff4757";
+        detalheElement.style.display = "block";
+        detalheElement.style.textAlign = "left"; 
+        
+    } 
+    
+    else if (diferencaTotal === 0) {
         if (mesesMaior.length > 0 && mesesMenor.length > 0) {
             let textMaior = formatarListaMeses(mesesMaior);
             let textMenor = formatarListaMeses(mesesMenor);
-            detalheElement.innerHTML = `O ajuste no boleto <strong>${textMaior}</strong> foi para corrigir o faturado a menor na mensalidade <strong>${textMenor}</strong>.`;
+            detalheElement.innerHTML = `O ajuste no(s) boleto(s) <strong>${textMaior}</strong> foi para corrigir o faturado a menor na(s) mensalidade(s) <strong>${textMenor}</strong>.`;
         } else {
             detalheElement.innerHTML = `O faturamento está correto em todos os meses avaliados. Nenhuma compensação interna foi necessária.`;
         }
@@ -180,3 +247,24 @@ function limparTudo() {
         checkboxes.forEach(box => box.checked = false);
     }
 }
+
+
+document.addEventListener('keydown', function(event) {
+    const modalFluxograma = document.getElementById('modalFluxograma');
+    const modalResultado = document.getElementById('modalResultado');
+
+    if (event.key === 'Escape' || event.key === 'Enter') {
+       
+        if (modalResultado && modalResultado.style.display === 'flex') {
+            fecharModalResultado();
+        } 
+        
+        else if (modalFluxograma && modalFluxograma.style.display === 'flex') {
+            if (event.key === 'Enter') {
+                validarAcesso(); 
+            } else {
+                fecharModal(); 
+            }
+        }
+    }
+});
